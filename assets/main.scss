@@ -1,0 +1,30 @@
+---
+---
+
+$background-color: #fffdfd;
+$visited-color: #D7624F;
+$link-color: #9C1F14;
+$text-color: #582707;
+
+@import "minima";
+
+body {
+  color: $text-color;
+  background-color: $background-color;
+}
+
+a {
+  color: $link-color;
+}
+
+a:visited {
+  color: $visited-color;
+}
+
+.site-nav .page-link {
+  color: $link-color;
+}
+
+.site-nav .page-link:visited {
+  color: $visited-color;
+}
