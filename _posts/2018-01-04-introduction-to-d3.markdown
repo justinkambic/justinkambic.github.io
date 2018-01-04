@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Introduction to D3"
-date:   2017-12-22 10:57:44 -0400
+date:   2018-01-04 00:00:00 -0400
 categories: javascript d3
 ---
 This is the first post in a series of posts I'm writing as I learn
@@ -168,8 +168,7 @@ If you dislike this, you can modify the function to reduce the value by whatever
 
 #### Scaling the SVG
 Now we're going to modify the size of our [svg](https://developer.mozilla.org/en-US/docs/Web/SVG) element. If you're not familiar
-with SVG (Scalable Vector Graphics), it's essentially a 2D graphics standard intended for use with HTML. D3 is integrated with SVG, and interacting with SVG is
-probably its most common use case.
+with SVG (Scalable Vector Graphics), it's essentially a 2D graphics standard intended for use with HTML. D3 is integrated with SVG, and interacting with SVG is probably its most common use case.
 
 Paste this code into your file:
 
@@ -185,8 +184,7 @@ We're also setting the variable `svg` equal to the return of [d3.select](https:/
 to the svg element as needed.
 
 ### Where the Magic Happens
-Ok, with all that setup behind us we are finally ready to get our first taste of the real power of D3! We're going to tell D3 to create a `rect` element within
-our SVG for each element in our data source.
+Ok, with all that setup behind us we are finally ready to get our first taste of the real power of D3! We're going to tell D3 to create a `rect` element within our SVG for each element in our data source.
 
 Paste this code into your file:
 
@@ -201,15 +199,14 @@ svg.selectAll("rect")
     .attr("height", d => height - yScale(d) + "px");
 {% endhighlight %}
 
-Whoa! What is happening here? Let's break it down line by line:
-* [selectAll](https://github.com/d3/d3-selection#selection_selectAll): this function returns any elements matching the selection criteria, and adds an element
-for each data point that doesn't have a match. In our case, we don't have any `rect` elements yet, so we're going to add one for each element of our data set.
+What is happening here? Let's break it down line by line:
+* [selectAll](https://github.com/d3/d3-selection#selection_selectAll): this function returns any elements matching the selection criteria, and adds an element for each data point that doesn't have a match. In our case, we don't have any `rect` elements yet, so we're going to add one for all the elements in our data set.
 * [data](https://github.com/d3/d3-selection#selection_data): allows us to specify the data we will use for the elements we're creating.
 * [enter](https://github.com/d3/d3-selection#selection_enter): this will get us a collection of any nodes we've selected, and placeholders for nodes that don't have a match.
 * [append](https://github.com/d3/d3-selection#selection_append): creates a new `rect` element for each element of our data set.
 * [attr](https://github.com/d3/d3-selection#selection_attr): allows us to edit attributes of each element we're creating.
 
-We're almost done, we just have one more thing to take care of.
+We're almost done, we have one more thing to do.
 
 #### Styling the Chart
 We want to give our chart some spiffy styles so it will be beautiful. Create a new stylesheet file under the `public` directory called `bar-chart.js`.
