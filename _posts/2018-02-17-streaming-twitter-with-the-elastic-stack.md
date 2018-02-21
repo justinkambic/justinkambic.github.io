@@ -1,53 +1,57 @@
 ---
 layout: post
-title: "Twitter Streaming with the Elastic Stack"
+title: "Streaming Twitter with the Elastic Stack"
 date: "2018-02-04 00:00:00 -0400"
 categories: elasticsearch twitter logstash
 ---
 
 ## Introduction
-This is some background on the rationale 
-
 Data visualization is an important topic in the landscape of contemporary information technology.
 With the right set of tools we can identify new patterns, and solve problems we didn't
 know we had.
 
 There are a ton of buzzwords in this field. Words like _data enrichment_, _insight_, _predictive analysis_,
-_intelligence discovery_, etc. frequently accompany descriptions of the technology
+_intelligence discovery_, etc., frequently accompany descriptions of the technology
 we're talking about. There are a lot of commonly-heard names in this space; some
-of the ones I hear the most are [Hadoop](), [MongoDB](), [Cassandra](), [ZooKeeper]() etc.
+of the ones I hear the most are [Hadoop](http://hadoop.apache.org/),
+[MongoDB](https://www.mongodb.com/), [Cassandra](http://cassandra.apache.org/),
+[Solr](http://lucene.apache.org/solr/), etc.
 
 Like I said, I've heard about this kind of technology for years, but as a lowly
-web developer I never really had much cause to take the time to learn how to
-use it, even though I've worked for several places that used BI technology.
-I finally decided to change all that and do something interesting and potentially
-insightful recently, using the [Elastic Stack]().
+web developer I never really took the time to learn how to use any of these
+databases, or the associated products that make them so powerful, even though I have
+worked for several companies that use BI technology. I finally decided to change
+all that and do something interesting and potentially insightful, using the
+[Elastic Stack](https://www.elastic.co/products).
 
-This post might seem like a lot at first, but I was impressed how easy it was
-to finish once I started. I just happened to be learning these tools on the
-night of the most recent [State of the Union Address](), so I had the idea to
-create this chart you see below:
+This post covers a lot of ground, but don't be intimidated, I was impressed
+how easy it was to go from nothing to something impressive and useful, once I started.
+I just happened to be learning these tools on the night of the most recent
+[State of the Union Address](https://www.c-span.org/video/?439496-1/president-trump-delivers-state-union-address),
+so I had the idea to create this chart you see below:
 
 ************************INSERT THE CHART******************************
 
-It might look pretty complicated, but I hardly had to lift a finger to create
-that insight. It contains a count of any tweet containing the specified keyword
-per minute for the time leading up to, during, and immediately after the address.
-It was really satisfying, and impressively simple to accomplish. Ok, enough
-background, let's do something neat.
+It might look like I put in a lot of work, but I hardly had to lift a finger to create
+that visualization. It contains counts of any tweet containing the specified keyword,
+split into one-minute buckets for the time leading up to, during, and immediately
+after the address.
+It was satisfying, and surprisingly easy to accomplish. Ok, enough background,
+let's do something neat.
 
 ## Prerequesites
 We're going to need to install three of the principal parts of the Elastic Stack
-for this project. They're called [Elasticsearch](), [Kibana](), and [Logstash]().
+for this project. They're called [Elasticsearch](https://github.com/elastic/elasticsearch),
+[Kibana](https://github.com/elastic/kibana), and [Logstash](https://github.com/elastic/logstash).
 Quick two second background:
 
 * Elasticsearch: full text search engine, this is where the tweets will be stored
 * Kibana: visualization engine, this is what we'll use to generate our chart
 * Logstash: data ingestion tool, this is what will stream Twitter for our keywords
 
-Disclaimer: I did this on a mac, but these tools are all cross-platform. You'll
-need Java installed on your system. I highly recommend [SDKMAN]() for managing
-Java versions as it makes it possible to switch between Java versions very easily.
+You are also going to need Java. I highly recommend [SDKMAN](http://sdkman.io/)
+for managing Java versions as it makes it possible to switch between Java versions
+easily, and you are going to need different versions for Elasticsearch/Logstash.
 
 ### Twitter app
 You're also going to need a Twitter app. If you don't have one already, you can
@@ -68,13 +72,14 @@ Likewise, you can download and install Kibana by following the instructions
 ### Logstash
 Lastly, [Logstash](https://www.elastic.co/guide/en/logstash/current/installing-logstash.html).
 This one is a little trickier - if you're using Java version 9, you'll need to
-switch to version 8. This is where the [SDKMAN]() tool comes in handy, because it allows
-you to very easily swap between Java versions in multiple terminal windows.
+switch to version 8. This is where the [SDKMAN](http://sdkman.io/) tool comes
+in handy, because it allows you to very easily swap between Java versions in
+multiple terminal windows.
 
 ## Implementation
 If you followed the guides on setting up the Elastic stack, you should now have
-a running instance of Elasticsearch and Kibana. There are a few ways to test Logstash
-is working, but the easiest is to supply it with a basic pipeline.
+running instances of Elasticsearch and Kibana. There are a few ways to test your
+Logstash installation, but the easiest is to supply it with a basic pipeline.
 
 You can read more about getting started with Logstash
 [here](https://www.elastic.co/guide/en/logstash/current/first-event.html), but
@@ -93,6 +98,8 @@ hello world
 ```
 
 Ok, CTRL+C to cancel and we'll begin to configure our pipeline.
+
+### Setting up the Twitter Input Plugin
 
 Inside the Logstash installation directory, there's a folder named `config`.
 Create a new folder in that directory called `twiter.conf`. Open it in your
@@ -151,4 +158,12 @@ running it, go it its install directory and run `bin/kibana` or `bin\kibana.bat`
 you're on Windows. From there, open up your favorite browser and go to `http://localhost:5601`.
 Kibana should load.
 
+***************************** SHOW A PHOTO OF KIBANA *********************************
 
+*************WRITING ON MEMORY FROM HERE - REVIEW ALL OF THIS CLOSELY********************
+The first thing we're going to want to do is choose a default index to use.
+Go to the management tab and choose the logstash index (by default it should be something like `logstash-2018-02-01...`).
+Then open the `Discover` application, and you should see a set of documents outlined,
+along with a histogram bar chart showing the volume of events processed by the stack.
+
+Any tweet that contains some of our keywords 
