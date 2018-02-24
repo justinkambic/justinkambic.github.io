@@ -166,4 +166,12 @@ Go to the management tab and choose the logstash index (by default it should be 
 Then open the `Discover` application, and you should see a set of documents outlined,
 along with a histogram bar chart showing the volume of events processed by the stack.
 
-Any tweet that contains some of our keywords 
+Any tweet that Logstash harvested will be accounted for in this chart.
+Our next step is to make some visualization of the tweets we're capturing.
+Go to the visualizations app and choose new line chart. We will be creating
+a histogram, and splitting our tweets into various sub-buckets.
+
+Put them into sub-buckets and your chart visualization is done! You can save and
+export this visualization to a custom dashboard, and make additional
+visualizations to accompany it! And just like that, using all-free tools,
+you've got access to a super useful chart!
