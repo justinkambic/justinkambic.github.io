@@ -9,7 +9,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   Docker, and other web tehcnologies that I use on a daily basis. Any time
   I learn something interesting, I tend to post about it on here.
 baseurl: "" # the subpath of your site, e.g. /blog
-twitter_username: JK_dev
+twitter_username: JK_uidev
 github_username:  justinkambic
 
 # Build settings
