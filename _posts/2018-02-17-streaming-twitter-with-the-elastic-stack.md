@@ -29,7 +29,7 @@ I just happened to be learning these tools on the night of the most recent
 [State of the Union Address](https://www.c-span.org/video/?439496-1/president-trump-delivers-state-union-address),
 so I had the idea to create this chart you see below:
 
-************************INSERT THE CHART******************************
+![State Of Union Chart]({{ "/assets/images/elk-intro/state-of-union-chart.jpg" | absolute_url }})
 
 It might look like I put in a lot of work, but I hardly had to lift a finger to create
 that visualization. It contains counts of any tweet containing the specified keyword,
@@ -293,35 +293,34 @@ noted in the previous section. Plug those values in.
 The last option is the most interesting: `keywords`. This is where we can tell Logstash
 what words are interesting to us. There are other options as well; for instance, you
 could ask Logstash to show you what all the followers of a particular user are tweeting.
+Your keywords should be specified as an array, so write them like this:
+`keywords => ['first', 'second', 'third']`.
 
-There are other useful options, such as ignoring retweets. You can read more about it
+There are other useful options, such as ignoring retweets, specifying whether to grab full tweets, etc.
+You can read more about it
 [in the docs](https://www.elastic.co/guide/en/logstash/current/plugins-inputs-twitter.html).
 
-For now, put in some keywords
+For now, put in some keywords that you find interesting. If you can't think of any,
+use topical words related to trending news stories. As I mentioned before, I used
+keywords I thought would be relevant to the State of the Union Address that aired
+in February 2018.
 
-BEFORE WE ACTUALLY START LOGSTASH, LET'S GO AHEAD AND DELETE THE INDICES WE CREATED
-JUST TO MAKE SURE WE'RE STARTING WITH A CLEAN SLATE!!
-
-All of the authentication-related information can be obtained by following the
-instructions above under `Prerequesites/Twitter`.
-
-For `keywords`, feel free to enter any words you'd like to capture tweets about.
-this is an array so it should read like `keywords => ["cars", "Ford", "Chevy"]`
-
-There are a few additional options that you may find interesting. If you include
-`full_tweet => ` with `true` or `false`, it'll save the entire tweet object
-returned by the Twitter API, which includes tons of data about the tweet and the
-user who tweeted it. You can also tell it to `ignore_retweets => true` to skip
-any retweets, `follows => []` to limit your results to the followers of given
-accounts (be sure to provide user IDs instead of usernames).
-
-There are numerous other options and customizations you can leverage; you can
-read more about the Twitter input plugin [here](https://www.elastic.co/guide/en/logstash/5.5/plugins-inputs-twitter.html).
+When you have plugged in your keywords, you're ready to go!
 
 ## Stash Some Tweets!
-Ok, the moment has finally arrived, let's stash some tweets! If you'd like to
-receive a little more feedback about the tweets you're capturing, you can add
-an `stdout` output plugin to your pipeline as well like this:
+Ok, the moment has finally arrived, let's stash some tweets!
+
+Before we run Logstash, let's clean up the index we created earlier. Back in your
+Kibana instance, run this query:
+
+```
+DELETE logstash-*
+```
+
+This should clean up any indices Logstash created with default naming convention.
+
+If you'd like to receive a little more feedback about the tweets you're capturing,
+you can add an `stdout` output plugin to your pipeline as well like this:
 
 ```
 output {
@@ -333,28 +332,44 @@ output {
 Next, start Logstash by running `bin/logstash -f config/twitter.conf`. If all
 goes well, it'll start logging Tweets that match the criteria you specified!
 
-Let's get some visibility on what we're grabbing.
+Now, let's get some visibility on what we're grabbing.
 
-## Enter Kibana
-Kibana will give you a window into your Elasticsearch instance. If you're not already
-running it, go it its install directory and run `bin/kibana` or `bin\kibana.bat` if
-you're on Windows. From there, open up your favorite browser and go to `http://localhost:5601`.
-Kibana should load.
+## Kibana Visualizations
 
-***************************** SHOW A PHOTO OF KIBANA *********************************
+Back in your Kibana window, go to the _Visualize_ tab. You'll likely see a message
+showing that you don't have any visualizations. Click the button to create a new one!
 
-*************WRITING ON MEMORY FROM HERE - REVIEW ALL OF THIS CLOSELY********************
-The first thing we're going to want to do is choose a default index to use.
-Go to the management tab and choose the logstash index (by default it should be something like `logstash-2018-02-01...`).
-Then open the `Discover` application, and you should see a set of documents outlined,
-along with a histogram bar chart showing the volume of events processed by the stack.
+![Kibana Visualize Tab]({{ "/assets/images/elk-intro/visualize-tab.png" | absolute_url }})
 
-Any tweet that Logstash harvested will be accounted for in this chart.
-Our next step is to make some visualization of the tweets we're capturing.
-Go to the visualizations app and choose new line chart. We will be creating
-a histogram, and splitting our tweets into various sub-buckets.
+Choose a Line Chart.
 
-Put them into sub-buckets and your chart visualization is done! You can save and
-export this visualization to a custom dashboard, and make additional
-visualizations to accompany it! And just like that, using all-free tools,
-you've got access to a super useful chart!
+![Line Chart]({{ "/assets/images/elk-intro/line-chart-option.png" | absolute_url }})
+
+Next you'll have to choose an index pattern to use for the visualization. If you have
+a `logstash-*` one saved, just go ahead and use that one.
+
+![Select Index]({{ "/assets/images/elk-intro/select-index.png" | absolute_url }})
+
+Under `Buckets`, click on `X-Axis` and choose `Date Histogram` for your Aggregation type.
+
+Click the Play button to apply the changes. You should see something like below:
+
+![Sample Histogram]({{ "/assets/images/elk-intro/sample-histogram.png" | absolute_url }})
+
+All that we have left to do is split our tweet counts into sub-buckets. Do this
+by clicking the `Add sub-buckets` button at the bottom of your X-Axis options.
+
+Choose the option to `split series`, choose `Filters` as the sub-aggregation, and then
+start adding filters to see your keywords. You can do all sorts of things with these
+options, but for our purposes I chose to demonstrate some basic information,
+like tweets about puppies and kittens. Look at the image below for more information:
+
+![Sub Buckets]({{ "/assets/images/elk-intro/sub-buckets.png" | absolute_url }})
+
+At the top of the _Visualize_ window, there is a `Save` button that lets you
+keep the visualization you've created. You can then create custom dashboards and
+import any visualizations you've made. Try creating an interesting pie or bar chart,
+and create a basic dashboard.
+
+There are tons of other resources out there to learn more about Kibana and the rest of
+the Elastic Stack. Keep digging in and make something cool!
